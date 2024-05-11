@@ -65,6 +65,7 @@
 #define BCM2708_PERI_BASE        0x20000000
 #define BCM2709_PERI_BASE        0x3F000000
 #define BCM2711_PERI_BASE        0xFE000000
+#define BCM2712_PERI_BASE        0x40000000
 
 #define GPIO_REGISTER_OFFSET         0x200000
 #define COUNTER_1Mhz_REGISTER_OFFSET   0x3000
@@ -231,7 +232,8 @@ enum RaspberryPiModel {
   PI_MODEL_1,
   PI_MODEL_2,
   PI_MODEL_3,
-  PI_MODEL_4
+  PI_MODEL_4,
+  PI_MODEL_5
 };
 
 static int ReadFileToBuffer(char *buffer, size_t size, const char *filename) {
@@ -284,6 +286,9 @@ static RaspberryPiModel DetermineRaspberryModel() {
   case 0x14: /* CM4 */
     return PI_MODEL_4;
 
+  case 0x17: /* Pi 5 */
+    return PI_MODEL_5;
+
   default:  /* a bunch of versions representing Pi 3 */
     return PI_MODEL_3;
   }
@@ -305,6 +310,7 @@ static uint32_t *mmap_bcm_register(off_t register_offset) {
   case PI_MODEL_2: base = BCM2709_PERI_BASE; break;
   case PI_MODEL_3: base = BCM2709_PERI_BASE; break;
   case PI_MODEL_4: base = BCM2711_PERI_BASE; break;
+  case PI_MODEL_5: base = BCM2712_PERI_BASE; break;
   }
 
   int mem_fd;
